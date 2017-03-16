@@ -3,7 +3,7 @@ import java.net.URL
 import kotlin.system.exitProcess
 
 const val VERSION = "0.0.1"
-var server = "https://raw.githubusercontent.com/Pasha13666/create-node.sh/repo/"
+var server = "https://raw.githubusercontent.com/Pasha13666/create-node.kt/repo/"
 var verbose = false
 val files = mutableMapOf<String, String>()
 val modules = mutableSetOf<String>()

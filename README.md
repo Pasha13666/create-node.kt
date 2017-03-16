@@ -7,7 +7,7 @@ Create-node is simple system to downloading node.kt modules.
 
 Download file `create-node.sh`, add it to your `$PATH` and make executable:
 ```sh
-wget "https://raw.githubusercontent.com/Pasha13666/create-node.sh/master/create-node.sh"
+wget "https://raw.githubusercontent.com/Pasha13666/create-node.kt/master/create-node.sh"
 sudo mv create-node.sh /usr/bin
 sudo chmod +x /usr/bin/create-node.sh
 ```

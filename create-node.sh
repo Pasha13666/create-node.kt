@@ -1,6 +1,6 @@
 #!/bin/sh
 
-url="https://raw.githubusercontent.com/Pasha13666/create-node.sh/master/dist/create-node.kt.jar"
+url="https://raw.githubusercontent.com/Pasha13666/create-node.kt/master/dist/create-node.kt.jar"
 remove_jar=false
 
 if [ -n "$JAVA_HOME" ];then
