@@ -9,7 +9,7 @@ Library:kotlin-stdlib-1.1.1.jar
 Library:comons-logging-1.1.3.jar
 Library:slf4j-1.7.7.jar
 Library:node.kt-1.0.jar
-Module:freemaker:2.3.20:Library:freemaker-2.3.20.jar:node.kt-module-freemaker-1.0.jar
+Module:freemarker:2.3.20:Library:freemarker-2.3.20.jar:node.kt-module-freemarker-1.0.jar
 Module:velocity:1.7:Library:velocity-1.7.jar:node.kt-module-velocity-1.0.jar
 Module:netty:4.0.28:Library:netty-4.0.28.jar:node.kt-module-netty-1.0.jar
 Module:smtweb:1.0.0:Library:node.kt-module-smtweb-1.0.0.jar
