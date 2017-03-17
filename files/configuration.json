@@ -1,0 +1,15 @@
+{
+  "server": {
+    "port": 3080
+  },
+  "ssl": {
+    "port": 3446,
+    "enable": false,
+    "key": "keystore.jks",
+    "key type": "JKS",
+    "password": "password"
+  },
+  "oauth": {
+
+  }
+}
