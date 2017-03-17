@@ -11,7 +11,7 @@ Library:slf4j-1.7.7.jar
 Library:node.kt-1.0.jar
 Module:freemarker:2.3.20:Library:freemarker-2.3.20.jar:node.kt-module-freemarker-1.0.jar
 Module:velocity:1.7:Library:velocity-1.7.jar:node.kt-module-velocity-1.0.jar
-Module:netty:4.0.28:Library:netty-4.0.28.jar:node.kt-module-netty-1.0.jar
+Module:netty:4.0.28:Library:netty-all-4.0.28.Final.jar:node.kt-module-netty-1.0.jar
 Module:smtweb:1.0.0:Library:node.kt-module-smtweb-1.0.0.jar
 Module:servlet:1.0.0:Library:servlet-api-2.5.jar:jstl-1.1.2.jar:jstl-1.1.2.jar:node.kt-module-servlet-1.0.0.jar
 Module:oauth:0.1.0:Library:httpclient-4.3.6.jar:node.kt-module-oauth-0.1.0.jar
