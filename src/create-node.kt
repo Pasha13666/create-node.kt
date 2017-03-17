@@ -94,7 +94,7 @@ fun main(args: Array<String>){
     files.forEach { file, uri ->
         if (verbose)
             println("Downloading $server$uri...")
-        val f = File(file)
+        val f = File(file).absoluteFile!!
         if (f.exists())
             return@forEach
         f.parentFile.mkdirs()
