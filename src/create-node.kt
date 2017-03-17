@@ -49,10 +49,10 @@ fun parseArgs(args: Array<String>){
     for(i in args){
         if (i[0] != '-')
             usage(1)
-        var k = i
+        var k = i.substring(1)
         var v = ""
         if ('=' in i) {
-            val t = i.substring(1).split('=', limit = 2)
+            val t = k.split('=', limit = 2)
             k = t[0]
             v = t[1]
         }
