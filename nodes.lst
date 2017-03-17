@@ -6,7 +6,7 @@ Component:configuration.json
 Component:start.sh
 Component:start.bat
 Library:kotlin-stdlib-1.1.1.jar
-Library:comons-logging-1.1.3.jar
+Library:commons-logging-1.1.3.jar
 Library:slf4j-1.7.7.jar
 Library:node.kt-1.0.jar
 Module:freemarker:2.3.20:Library:freemarker-2.3.20.jar:node.kt-module-freemarker-1.0.jar
