@@ -52,7 +52,7 @@ fun parseArgs(args: Array<String>){
         var k = i
         var v = ""
         if ('=' in i) {
-            val t = i.substring(2).split('=', limit = 2)
+            val t = i.substring(1).split('=', limit = 2)
             k = t[0]
             v = t[1]
         }
@@ -67,7 +67,10 @@ fun parseArgs(args: Array<String>){
                 println("create-node.sh v$VERSION")
                 exitProcess(0)
             }
-            else -> usage(1)
+            else -> {
+                println("Invalid argument: $k")
+                usage(1)
+            }
         }
     }
 }
@@ -88,7 +91,7 @@ fun main(args: Array<String>){
         exitProcess(2)
     }
 
-    files.forEach { uri, file ->
+    files.forEach { file, uri ->
         if (verbose)
             println("Downloading $server$uri...")
         val f = File(file)
