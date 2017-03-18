@@ -3,8 +3,8 @@ import java.net.URL
 import kotlin.system.exitProcess
 
 const val VERSION = "0.1.1"
-val LOCAL_MODULES_RE = "^[ \\t]*([a-zA-Z_][a-zA-Z0-9_-]*)[ \\t]*(==|<=|>=|<|>)[ \\t]*([0-9]+(?:\\.[0-9]+)*)[ \\t]*$".toRegex()
-val GLOBAL_MODULES_RE = "^[ \\t]*([a-zA-Z_][a-zA-Z0-9_-]*)[ \\t]+((?:[0-9]+(?:\\.[0-9]+)*)(?:[ \\t]+(?:[0-9]+(?:\\.[0-9]+)*))*)[ \\t]+$".toRegex()
+val LOCAL_MODULES_RE = "^[ \\t]*([a-zA-Z_][a-zA-Z0-9_-]*)[ \\t]*(==|<=|>=|<|>)[ \\t]*([0-9]+(?:\\.[0-9]+)*|\\*)[ \\t]*$".toRegex()
+val GLOBAL_MODULES_RE = "^[ \\t]*([a-zA-Z_][a-zA-Z0-9_-]*)[ \\t]+((?:[0-9]+(?:\\.[0-9]+)*)(?:[ \\t]+(?:[0-9]+(?:\\.[0-9]+)*))*)[ \\t]*$".toRegex()
 var server = "https://raw.githubusercontent.com/Pasha13666/create-node.kt/repo/"
 val modules = mutableMapOf<String, String>()
 
@@ -93,10 +93,10 @@ fun main(args: Array<String>){
             exitProcess(2)
         }
 
-        URL("$server/modules/$name/$version/module.txt").openStream().bufferedReader(Charsets.UTF_8)
+        URL("$server/modules/$name/$v/module.txt").openStream().bufferedReader(Charsets.UTF_8)
                 .forEachLine {
             val (file, uri) = it.split("[ \\t]+".toRegex(), limit = 2)
-            files[file] = if (uri[0] == '@') uri.substring(1) else "$server/modules/$name/$version/$uri"
+            files[file] = if (uri[0] == '@') uri.substring(1) else "$server/modules/$name/$v/$uri"
         }
     }
 
