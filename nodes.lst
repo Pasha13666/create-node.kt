@@ -15,7 +15,7 @@ Module:netty:4.0.28:Library:netty-all-4.0.28.Final.jar:node.kt-module-netty-1.0.
 Module:smtweb:1.0.0:Library:node.kt-module-smtweb-1.0.0.jar
 Module:servlet:1.0.0:Library:servlet-api-2.5.jar:jstl-1.1.2.jar:jstl-1.1.2.jar:node.kt-module-servlet-1.0.0.jar
 Module:oauth:0.1.0:Library:httpclient-4.5.2.jar:httpcore-4.4.4.jar:node.kt-module-oauth-0.1.0.jar
-Module:mail:0.1.0:Library:javax-mail-1.5.2.jar:node.kt-module-mail-0.1.0.jar
+Module:mail:0.1.0:Library:javax-mail-api-1.5.2.jar:node.kt-module-mail-0.1.0.jar
 Module:lesscss:1.7.0.1.1:Group:__lesscss_libs:__lesscss_dirs
 Module:__lesscss_libs:1.7.0.1.1:Library:lesscss-1.7.0.1.1.jar:node.kt-module-lesscss-1.0.jar
 Module:__lesscss_dirs:1.7.0.1.1:Directory:lesscss
