@@ -1,0 +1,2 @@
+lib/lesscss-1.7.0.1.1.jar		lesscss-1.7.0.1.1.jar
+lib/node.kt-module-lesscss-1.0.jar	node.kt-module-lesscss-1.0.jar

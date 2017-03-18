@@ -1,0 +1,2 @@
+lib/netty-all-4.0.28.Final.jar		netty-all-4.0.28.Final.jar
+lib/node.kt-module-netty-1.0.jar	node.kt-module-netty-1.0.jar

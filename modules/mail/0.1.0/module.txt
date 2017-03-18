@@ -1,0 +1,2 @@
+lib/javax-mail-api-1.5.2.jar		javax-mail-api-1.5.2.jar
+lib/node.kt-module-mail-0.1.0.jar	node.kt-module-mail-0.1.0.jar

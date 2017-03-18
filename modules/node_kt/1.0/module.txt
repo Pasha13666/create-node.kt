@@ -1,0 +1,8 @@
+lib/kotlin-stdlib-1.1.1.jar	../../../libraries/kotlin-stdlib-1.1.1.jar
+lib/commons-logging-1.2.jar	../../../libraries/commons-logging-1.2.jar
+lib/slf4j-1.7.7.jar		../../../libraries/slf4j-1.7.7.jar
+lib/slf4j-simple-1.7.2.jar	../../../libraries/slf4j-simple-1.7.2.jar
+lib/node.kt-1.0.jar		../../../libraries/node.kt-1.0.jar
+configuration.json		../../../files/configuration.json
+start.sh			../../../files/start.sh
+start.bat			../../../files/start.bat

@@ -1,0 +1,37 @@
+# modules.txt -- module list for version 0.1.1 and later.
+# Commets allowed only at start of line and starts with '#'.
+# Empty lines are ignored.
+
+# Format is:
+#    <sp>?  <name> <sp>? <version> (<sp>+ <version>)+ <sp>?
+# , where:
+#    <sp> - space or tabulation
+#    <name> - module name. Allowed english letters, '_', numbers (not at start).
+#    <version> - module version. Numbers, separated with dots.
+# Examples:
+#    my_module      1.1.3	1.0.1	1.0.0
+#    _module_123    1.1		1.0	1.0.1
+#    mod3           1.3		1.10
+
+# Versioning:
+#    Version compares part by part, from start to end:
+#    For example, in `my_module` 1.1.3 greater then 1.0.1, 1.0.1 grater then 1.0.0;
+#    in `_module_123` 1.1  grater then 1.0.1, 1.0.1 grater then 1.0;
+#    in `mod2` 1.10 grater then 1.3.
+
+# System:
+node_kt		1.0
+
+# Template engines:
+freemarker	2.3.20
+velocity	1.7
+lesscss		1.7.0.1.1
+
+# Servers:
+netty		4.0.28
+smtweb		1.0.0
+servlet		1.0.0
+
+# Tools:
+oauth		0.1.0
+mail		0.1.0
