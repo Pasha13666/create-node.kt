@@ -2,104 +2,129 @@ import java.io.File
 import java.net.URL
 import kotlin.system.exitProcess
 
-const val VERSION = "0.0.1"
+const val VERSION = "0.1.1"
+val LOCAL_MODULES_RE = "^[ \\t]*([a-zA-Z_][a-zA-Z0-9_-]*)[ \\t]*(==|<=|>=|<|>)[ \\t]*([0-9]+(?:\\.[0-9]+)*)[ \\t]*$".toRegex()
+val GLOBAL_MODULES_RE = "^[ \\t]*([a-zA-Z_][a-zA-Z0-9_-]*)[ \\t]+((?:[0-9]+(?:\\.[0-9]+)*)(?:[ \\t]+(?:[0-9]+(?:\\.[0-9]+)*))*)[ \\t]+$".toRegex()
 var server = "https://raw.githubusercontent.com/Pasha13666/create-node.kt/repo/"
-var verbose = false
-val files = mutableMapOf<String, String>()
-val modules = mutableSetOf<String>()
+val modules = mutableMapOf<String, String>()
 
-fun usage(status: Int){
-    print("""Usage: create-node.sh [ARGS]...
-Where ARGS is:
-    -?, -h, -help, --help       Show this help.
-    -d=DIR, -directory=DIR      Create node in DIR, not in current directory.
-    -S=URL, -server=URL         Use URL as base server url to download files.
-    -m=MODULE, -module=MODULE   Use MODULE. This option can be repeated.
-    -v, -verbose                Make more output.
-    -V, -version                Print version and exit.
+private fun usage(status: Int){
+    print("""Usage: create-node.sh [OPTION...] [DIRECTORY] [MODULE...]
+Where OPTIONS is:
+    -h, --help      Show this help.
+    -v, --version   Print version and exit.
+    --server=URL    Use URL as base server url to download files.
+DIRECTORY is path to new node, default is current dir.
+MODULE is name of module to install. New modules will be added to end of
+  `%DIRECTORY%/modules.list`.
 """)
     exitProcess(status)
 }
 
-fun download(file: String) = URL(server + file).openStream().buffered()
-
-fun parseModule(k: String, v: String){
-    when (k){
-        "Library" -> files["lib/$v"] = "libraries/$v"
-        "Component" -> files[v] = "files/$v"
-        "Module" ->{
-            val mod = v.split(':')
-            if (mod[0] !in modules)
-                return
-            modules.remove(mod[0])
-            if (verbose)
-                println("Appending module ${mod[0]}, version=${mod[1]}, type=${mod[2]}")
-            when (mod[2]){
-                "Library" -> mod.listIterator(3).forEach { files["lib/$it"] = "modules/${mod[0]}/${mod[1]}/$it" }
-                "Component" -> mod.listIterator(3).forEach { files[it] = "modules/${mod[0]}/${mod[1]}/$it" }
-                "Directory" -> mod.listIterator(3).forEach { File(it).mkdirs() }
-                "Group" -> modules.addAll(mod.subList(3, mod.size))
-            }
-        }
-        "Directory" -> File(v).mkdirs()
-    }
-}
-
-fun parseArgs(args: Array<String>){
-    for(i in args){
-        if (i[0] != '-')
-            usage(1)
-        var k = i.substring(1)
-        var v = ""
-        if ('=' in i) {
-            val t = k.split('=', limit = 2)
-            k = t[0]
-            v = t[1]
-        }
-
-        when (k){
-            "m", "module" -> modules.add(v)
-            "d", "directory" -> System.setProperty("user.dir", v)
-            "S", "server-url" -> server = v
-            "?", "h", "help", "-help" -> usage(0)
-            "v", "verbose" -> verbose = true
-            "V", "version" -> {
+private fun parseArgs(args: Array<String>) {
+    var ks = 0
+    loop@ for ((k, i) in args.withIndex())
+        when (i) {
+            "-h", "--help" -> usage(0)
+            "-v", "--version" -> {
                 println("create-node.sh v$VERSION")
                 exitProcess(0)
             }
             else -> {
-                println("Invalid argument: $k")
-                usage(1)
+                if (i.startsWith("--server="))
+                    server = i.substring(9)
+                else {
+                    ks = k
+                    break@loop
+                }
             }
         }
+
+    if (ks in args.indices){
+        if (args[ks][0] == '-')
+            usage(1)
+        File(args[ks]).mkdirs()
+        System.setProperty("user.dir", args[ks++]) // cd args[ks]
     }
+
+    for (i in ks..args.lastIndex)
+        if (args[ks][0] == '-')
+            usage(1)
+        else modules[args[i]] = "==*"
 }
 
 fun main(args: Array<String>){
     parseArgs(args)
 
-    download("nodes.lst").reader(Charsets.UTF_8).forEachLine {
-        if (':' !in it)
-            return@forEachLine
+    File("modules.list").absoluteFile.apply {
+        if (!exists())
+            createNewFile()
 
-        val (k, v) = it.split(':', limit = 2)
-        parseModule(k, v)
+        forEachLine(Charsets.UTF_8){
+            if (it.isEmpty() || it[0] == '#')
+                return@forEachLine
+
+            val r = LOCAL_MODULES_RE.find(it) ?: return@forEachLine
+            if (r.groupValues[1] !in modules || modules[r.groupValues[1]] == "==*")
+                modules[r.groupValues[1]] = r.groupValues[2] + r.groupValues[3]
+        }
     }
 
-    if (modules.isNotEmpty()){
-        println("Invalid module name: ${modules.first()}!")
-        exitProcess(2)
+    val modinfo = mutableMapOf<String, MutableList<List<String>>>()
+    URL("$server/modules.txt").openStream().bufferedReader(Charsets.UTF_8).forEachLine {
+        if (it.isEmpty() || it[0] == '#')
+            return@forEachLine
+
+        val r = GLOBAL_MODULES_RE.find(it) ?: return@forEachLine
+        modinfo[r.groupValues[1]] = r.groupValues[2].split(' ', '\t').map { it.split('.') }.toMutableList()
+    }
+
+    val files = mutableMapOf<String, String>()
+    modules.forEach { name, version ->
+        if (name !in modinfo) {
+            println("Invalid module: $name ($version)!")
+            exitProcess(2)
+        }
+
+        val v = if (version != "==*") compareVersion(version, modinfo[name]!!)
+        else modinfo[name]?.maxWith(Comparator(::vercmp))?.joinToString(".")
+        if (v == null) {
+            println("Module $name has no version $version!")
+            exitProcess(2)
+        }
+
+        URL("$server/modules/$name/$version/module.txt").openStream().bufferedReader(Charsets.UTF_8)
+                .forEachLine {
+            val (file, uri) = it.split("[ \\t]+".toRegex(), limit = 2)
+            files[file] = if (uri[0] == '@') uri.substring(1) else "$server/modules/$name/$version/$uri"
+        }
     }
 
     files.forEach { file, uri ->
-        if (verbose)
-            println("Downloading $server$uri...")
+        println("Downloading $uri...")
         val f = File(file).absoluteFile!!
         if (f.exists())
             return@forEach
         f.parentFile.mkdirs()
-        download(uri).copyTo(f.outputStream())
+        URL(uri).openStream().copyTo(f.outputStream())
     }
 
     println("Successfully created node.kt!")
+}
+
+private fun vercmp(o1: List<String>, o2: List<String>) =
+    (0..minOf(o1.lastIndex, o2.lastIndex)).map { o1[it].compareTo(o2[it]) }.firstOrNull { it != 0 }
+            ?: o1.size.compareTo(o2.size)
+
+private fun compareVersion(version: String, versions: List<List<String>>): String? {
+    if (version[1] == '=') version.substring(2).let {
+        if (it.split('.') in versions) return it
+    }
+    val ve = version.substring(if (version[1] == '=') 2 else 1).split('.')
+    return when (version[0]){
+        '<' -> versions.firstOrNull { vercmp(it, ve) < 0 }
+        '>' -> versions.firstOrNull { vercmp(it, ve) > 0 }
+        // Bad regexp???
+        else -> throw RuntimeException("Invalid module version.")
+    }?.joinToString(".")
 }

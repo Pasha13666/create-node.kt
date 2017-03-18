@@ -1,6 +1,6 @@
 #!/bin/sh
 
-url="https://raw.githubusercontent.com/Pasha13666/create-node.kt/master/dist/create-node.kt.jar"
+url="https://raw.githubusercontent.com/Pasha13666/create-node.kt/dev/dist/create-node.kt.jar"
 remove_jar=false
 
 if [ -n "$JAVA_HOME" ];then
@@ -15,11 +15,11 @@ else
 fi
 
 if [ -d "/tmp" -a -w "/tmp" ];then
-    tmpjar="/tmp/create-node.jar"
+    tmpjar="/tmp/create-node-dev.jar"
 elif [ -n "$HOME" -a -d "$HOME" -a -w "$HOME" ];then
-    tmpjar="$HOME/.cache/create-node.jar"
+    tmpjar="$HOME/.cache/create-node-dev.jar"
 elif [ -w "." ];then
-    tmpjar="./create-node"
+    tmpjar="./create-node-dev.jar"
     remove_jar=true
 else
     echo "Cannot find writable temporary directory! Try \`chmod +w .\`."
@@ -45,7 +45,9 @@ fi
 
 if ${remove_jar};then
     ${java} -jar "$tmpjar" "$@"
+    r=$?
     rm -f "$tmpjar"
+    exit "$r"
 else
     exec ${java} -jar "$tmpjar" "$@"
 fi
